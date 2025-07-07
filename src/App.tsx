@@ -1,35 +1,29 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-
+import "./App.css";
+import HomeContent from "./components/homeContent.tsx"; // Remove .jsx extension for TS
+import { useState } from "react";
+import ImageView from "./components/imageView.tsx";
 function App() {
-  const [count, setCount] = useState(0)
+  // State to store the preview URL of the selected image
+  const [preview, setPreview] = useState<string | null>(null);
+
+  // Event handler for image file input changes
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    const file = e?.target?.files?.[0]; // Optional chaining with array access
+    if (file) {
+      setPreview(URL.createObjectURL(file));
+    }
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <div className="min-h-screen w-full bg-teal-100 flex flex-col md:flex-row px-6 py-3 md:px-20 md:py-10 gap-5 items-center justify-center">
+      <HomeContent onImgChange={handleImageChange} />
+      {preview ? (
+        <ImageView src={preview || ""} />
+      ) : (
+        <div className="w-full"></div>
+      )}
+    </div>
+  );
 }
 
-export default App
+export default App;
